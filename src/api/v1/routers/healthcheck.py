@@ -11,5 +11,4 @@ async def healthcheck():
         Returns health check status
     """
 
-    print(DatabaseSettings())
     return {"status": "ok"}
