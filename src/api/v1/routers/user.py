@@ -18,7 +18,7 @@ async def create_user(
     user_service: UserServiceDep
 ):
     new_user = await user_service.create_new_user(user_data)
-    return new_user.id
+    return UserCreateResponseSchema(id=new_user.id)
 
 @router.get("")
 async def get_all_users(
