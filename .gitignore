@@ -361,4 +361,8 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
+# Postgres volume
+
+super_db/
+
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm,intellij
