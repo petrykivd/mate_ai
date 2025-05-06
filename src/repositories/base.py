@@ -1,5 +1,6 @@
 from abc import ABC
 
+from sqlalchemy import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
@@ -18,8 +19,11 @@ class BaseRepository(ABC):
     async def update(self):
         pass
 
-    async def add(self):
-        pass
+    async def add(self, obj_data: dict):
+        new_obj = await self._session.execute(
+            insert(self.model).values(**obj_data)
+        )
+        return new_obj
 
     async def delete(self):
         pass
