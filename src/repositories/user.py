@@ -2,7 +2,7 @@ from src.api.schemas.user import (
     UserCreateSchema,
     UserDetailResponseSchema,
 )
-from src.database.models.user import User
+from src.database.models.user.user import User
 from src.repositories.base import BaseRepository
 
 

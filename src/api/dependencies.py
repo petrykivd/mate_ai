@@ -3,9 +3,12 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.clients.gemini.client import GeminiClient, get_gemini_client
 from src.database.core.engine import get_async_session
 from src.repositories.user import UserRepository
+from src.repositories.user_profile import UserProfileRepository
 from src.services.user import UserService
+from src.services.user_profile.core import UserProfileService
 
 AsyncSessionDep = Annotated[AsyncSession, Depends(get_async_session)]
 
@@ -14,8 +17,13 @@ def get_user_repository(
     session: AsyncSessionDep
 ) -> UserRepository:
     return UserRepository(session=session)
-
 UserRepoDep = Annotated[UserRepository, Depends(get_user_repository)]
+
+def get_user_profile_repository(
+    session: AsyncSessionDep
+) -> UserProfileRepository:
+    return UserProfileRepository(session=session)
+UserProfileRepoDep = Annotated[UserProfileRepository, Depends(get_user_profile_repository)]
 
 def get_user_service(
     user_repo: UserRepoDep
@@ -23,3 +31,13 @@ def get_user_service(
     return UserService(user_repo=user_repo)
 
 UserServiceDep = Annotated[UserService, Depends(get_user_service)]
+
+GeminiClientDep = Annotated[GeminiClient, Depends(get_gemini_client)]
+
+def get_user_profile_service(
+    gemini_client: GeminiClientDep,
+    profile_repo: UserProfileRepoDep
+):
+    return UserProfileService(llm_client=gemini_client, profile_repo=profile_repo)
+
+UserProfileServiceDep = Annotated[UserProfileService, Depends(get_user_profile_service)]
