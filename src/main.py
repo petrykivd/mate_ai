@@ -4,7 +4,7 @@ from src.api.v1 import router as v1_router
 
 app = FastAPI(
     title="AI Interview Assistant",
-    description="Tech check via LLM",
+    description="Pass interviews with this service",
     version="0.1.0",
 )
 
