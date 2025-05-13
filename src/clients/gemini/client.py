@@ -25,7 +25,7 @@ class GeminiClient(BaseLLMClient):
             config.tools = [client_tools]
 
         client = genai.Client(api_key=self._settings.API_KEY)
-        response = client.models.generate_content(
+        response = await client.aio.models.generate_content(
             model=self._settings.MODEL,
             config=config,
             contents=message,
