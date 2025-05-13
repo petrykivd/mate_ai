@@ -1,4 +1,6 @@
-from src.api.schemas.user_profile import UserProfileCreateSchema
+from uuid import UUID
+
+from src.api.schemas.user_profile import UserProfileCreateSchema, UserProfileSchema
 from src.clients.gemini.client import GeminiClient
 from src.repositories.user_profile import UserProfileRepository
 from src.services.user_profile.prompts import PROFILE_GENERATE_SYSTEM_PROMPT
@@ -33,3 +35,7 @@ class UserProfileService:
             return user_profile
 
         raise RuntimeError("Failed to generate user profile")
+
+    async def get_user_profiles(self, user_id: UUID) -> list[UserProfileSchema]:
+
+        return await self._profile_repo.get_user_profiles(user_id)

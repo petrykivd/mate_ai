@@ -12,7 +12,8 @@ class User(Base, IdCreatedAtModelMixin):
     password: Mapped[str]
 
     # relations
-    user_profiles: Mapped[list["UserProfile"]] = relationship()
+    profiles: Mapped[list["UserProfile"]] = relationship()
+    interviews: Mapped[list["Interview"]] = relationship()
 
     def to_dto(self) -> UserDetailResponseSchema:
         return UserDetailResponseSchema(

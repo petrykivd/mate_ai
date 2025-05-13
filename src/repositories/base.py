@@ -1,7 +1,8 @@
 from abc import ABC
+from uuid import UUID
 
 from loguru import logger
-from sqlalchemy import insert
+from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
@@ -11,8 +12,11 @@ class BaseRepository(ABC):
     def __init__(self, session: AsyncSession):
         self._session = session
 
-    async def get(self):
-        pass
+    async def get(self, obj_id: UUID):
+        obj = await self._session.execute(
+            select(self.model).where(self.model.id == obj_id)
+        )
+        return obj.scalars().one_or_none()
 
     async def list(self):
         pass

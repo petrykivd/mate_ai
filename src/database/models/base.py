@@ -9,3 +9,6 @@ Base = declarative_base()
 class IdCreatedAtModelMixin:
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
     created_at: Mapped[dt] = mapped_column(DateTime(timezone=True), default=func.now())
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(id={self.id})"
