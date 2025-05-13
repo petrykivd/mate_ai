@@ -40,7 +40,6 @@ class GeminiClient(BaseLLMClient):
 
     @staticmethod
     def get_func_call(response: GenerateContentResponse) -> FunctionCall | None:
-        logger.warning(f"Gemini response: {response}")
         if response.candidates[0].content.parts[0].function_call:
             function_call = response.candidates[0].content.parts[0].function_call
             logger.debug(f"Gemini function call found!\n{function_call}")
