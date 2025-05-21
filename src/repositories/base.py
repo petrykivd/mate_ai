@@ -2,7 +2,7 @@ from abc import ABC
 from uuid import UUID
 
 from loguru import logger
-from sqlalchemy import insert, select
+from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
@@ -21,8 +21,12 @@ class BaseRepository(ABC):
     async def list(self):
         pass
 
-    async def update(self):
-        pass
+    async def update(self, obj_id: UUID, obj_data: dict):
+        obj = await self._session.execute(
+            update(self.model).where(obj_id == self.model.id).values(**obj_data).returning(self.model)
+        )
+
+        return obj.scalar()
 
     async def add(self, obj_data: dict):
         new_obj = await self._session.scalar(
