@@ -2,10 +2,9 @@ from uuid import UUID
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, relationship
-from sqlalchemy.testing.schema import mapped_column
+from sqlalchemy.orm import mapped_column
 
 from src.api.schemas.interview import InterviewDetailSchema
-from src.api.schemas.user_profile import UserProfileSchema
 from src.database.models.base import Base, IdCreatedAtModelMixin
 
 
@@ -18,6 +17,8 @@ class Interview(Base, IdCreatedAtModelMixin):
     experience: Mapped[float] = mapped_column()
     # TODO: Can be improved by using JSON field
     tech_stack: Mapped[str] = mapped_column()
+    is_active: Mapped[bool] = mapped_column(default=True)
+    feedback: Mapped[str] = mapped_column(nullable=True)
 
     # relations
     user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
@@ -28,9 +29,12 @@ class Interview(Base, IdCreatedAtModelMixin):
     def to_dto(self):
         return InterviewDetailSchema(
             id=self.id,
+            feedback=self.feedback,
+            is_active=self.is_active,
             title=self.title,
             tech_stack=self.tech_stack,
             job_position=self.job_position,
             experience=self.experience,
             user_id=self.user_id,
+            questions=[question.to_dto() for question in self.questions]
         )

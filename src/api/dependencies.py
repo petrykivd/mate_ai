@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.clients.gemini.client import GeminiClient, get_gemini_client
 from src.database.core.engine import get_async_session
+from src.repositories.answer import AnswerRepository
 from src.repositories.interview import InterviewRepository
 from src.repositories.question import QuestionRepository
 from src.repositories.user import UserRepository
@@ -43,6 +44,13 @@ def get_question_repository(
     return QuestionRepository(session=session)
 QuestionRepoDep = Annotated[QuestionRepository, Depends(get_question_repository)]
 
+
+def get_answer_repository(
+    session: AsyncSessionDep
+):
+    return AnswerRepository(session=session)
+AnswerRepoDep = Annotated[AnswerRepository, Depends(get_answer_repository)]
+
 def get_user_service(
     user_repo: UserRepoDep
 ):
@@ -63,12 +71,14 @@ def get_interview_service(
     interview_repo: InterviewRepoDep,
     profile_repo: UserProfileRepoDep,
     question_repo: QuestionRepoDep,
+    answer_repo: AnswerRepoDep,
     gemini_client: GeminiClientDep,
 ):
     return InterviewService(
         interview_repo=interview_repo,
         question_repo=question_repo,
         profile_repo=profile_repo,
+        answer_repo=answer_repo,
         llm_client=gemini_client,
     )
 InterviewServiceDep = Annotated[InterviewService, Depends(get_interview_service)]

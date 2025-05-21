@@ -3,8 +3,10 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field, model_validator
 
+from src.api.schemas.question import QuestionDetailSchema
 from src.api.schemas.user_profile import UserProfileSchema
 
+# TODO: Use BaseSchema instead of BaseModel
 
 class InterviewCreateSchema(BaseModel):
     title: Annotated[str | None, Field()] = None
@@ -39,8 +41,16 @@ class InterviewCreateSchema(BaseModel):
 
 class InterviewDetailSchema(BaseModel):
     id: UUID
+    is_active: bool
     title: str
+    feedback: Annotated[str | None, Field()] = None
     job_position: str
     experience: float
     tech_stack: str
     user_id: UUID
+    questions: list[QuestionDetailSchema]
+
+
+class InterviewFinishResponseSchema(BaseModel):
+    id: UUID
+    feedback: str
